@@ -24,7 +24,20 @@ public:
 	void BeginPlay() override;
 
 private:
+	// Set Crosshairs and make editable in Unreal
+	UPROPERTY(EditAnywhere)
+	float CrossHairXLocation = .5;
+
+	UPROPERTY(EditAnywhere)
+	float CrossHairYLocation = .33333;
+
+
 	// Start the tank moving the barrel so that a shot would hit
 	// where the crosshair intersects the world
 	void AimTowardsCrosshair();
+
+	// Return an OUT parameter, true if hit landscape
+	bool GetSightRayHitLocation(FVector& OutHitLocation) const;
+
+	bool GetLookDirection(FVector2D ScreenLocation, FVector & LookDirection) const;
 };
