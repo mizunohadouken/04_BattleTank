@@ -32,3 +32,9 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+void ATank::AimAt(FVector OutHitLocation)
+{
+	auto OurTankName = GetName();
+	//  TODO Tell controlled tank to aim at this point
+	UE_LOG(LogTemp, Warning, TEXT("Tank Name: %s is aiming at HitLocation: %s"), *OurTankName,*OutHitLocation.ToString())
+}
