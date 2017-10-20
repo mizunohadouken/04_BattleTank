@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TankAimingComponent.h"
-#include "GameFramework/Actor.h"
+
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
@@ -14,11 +14,36 @@ UTankAimingComponent::UTankAimingComponent()
 }
 
 
-void UTankAimingComponent::AimAt(FVector OutHitLocation)
+void UTankAimingComponent::SetBarrelReference(UStaticMeshComponent * BarrelToSet)
 {
-	auto OurTankName = GetOwner()->GetName();
-	//  TODO Tell controlled tank to aim at this point
-	UE_LOG(LogTemp, Warning, TEXT("Tank Name: %s is aiming at HitLocation: %s"), *OurTankName, *OutHitLocation.ToString())
+	Barrel = BarrelToSet;
+}
+
+void UTankAimingComponent::AimAt(FVector OutHitLocation, float LaunchSpeed)
+{
+	if (!Barrel) { return; } // protecting pointer
+
+	FVector OutLaunchVelocity;
+	FVector StartLocation = Barrel->GetSocketLocation(FName("ProjectileOut"));
+	if (UGameplayStatics::SuggestProjectileVelocity(
+			this,
+			OutLaunchVelocity,
+			StartLocation,
+			OutHitLocation,
+			LaunchSpeed,
+			false,
+			0,
+			0,
+			ESuggestProjVelocityTraceOption::DoNotTrace
+			)
+		)
+
+	{
+		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
+		auto TankName = GetOwner()->GetName();
+		UE_LOG(LogTemp, Warning, TEXT("%s is firing at %s"), *TankName, *AimDirection.ToString());
+	}
+	// If no solution, do nothing
 }
 
 // Called when the game starts
