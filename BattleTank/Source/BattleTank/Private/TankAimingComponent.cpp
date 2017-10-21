@@ -8,7 +8,7 @@ UTankAimingComponent::UTankAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = true; // TODO Should this tick?
 
 	// ...
 }
@@ -32,12 +32,24 @@ void UTankAimingComponent::AimAt(FVector OutHitLocation, float LaunchSpeed)
 		StartLocation,
 		OutHitLocation,
 		LaunchSpeed,
+		false,
+		0,
+		0,
 		ESuggestProjVelocityTraceOption::DoNotTrace
 	);
 	if (bHaveAimSolution)
 	{
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
 		MoveBarrelTowards(AimDirection);
+		auto WorldTime = GetWorld()->GetTimeSeconds();
+		auto TankName = GetOwner()->GetName();
+		UE_LOG(LogTemp, Warning, TEXT("%s is firing during %f"), *TankName, WorldTime);
+	}
+	else
+	{
+		auto WorldTime = GetWorld()->GetTimeSeconds();
+		auto TankName = GetOwner()->GetName();
+		UE_LOG(LogTemp, Warning, TEXT("%s has no solution found during %f"), *TankName, WorldTime);
 	}
 	// If no solution, do nothing
 }
