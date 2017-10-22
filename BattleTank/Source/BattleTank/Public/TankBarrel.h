@@ -21,7 +21,7 @@ public:
 	
 private:
 	UPROPERTY(EditAnywhere, Category = Setup)
-	float MaxDegreesPerSecond = 5; // TODO Tweakable
+	float MaxDegreesPerSecond = 10; // TODO Tweakable
 
 	UPROPERTY(EditAnywhere, Category = Setup)
 	float MaxElevationDegrees = 35; // TODO Tweakable
