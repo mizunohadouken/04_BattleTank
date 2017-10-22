@@ -2,6 +2,7 @@
 
 #include "TankAimingComponent.h"
 #include "TankBarrel.h"
+#include "TankTurret.h"
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
@@ -16,7 +17,14 @@ UTankAimingComponent::UTankAimingComponent()
 
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
+	if (!BarrelToSet) { UE_LOG(LogTemp, Warning, TEXT("No Barrel Set")) return; }
 	Barrel = BarrelToSet;
+}
+
+void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
+{
+	if (!TurretToSet) { UE_LOG(LogTemp, Warning, TEXT("No Turret Set")) return; }
+	Turret = TurretToSet;
 }
 
 void UTankAimingComponent::AimAt(FVector OutHitLocation, float LaunchSpeed)
@@ -61,5 +69,6 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	auto AimAsRotator = AimDirection.Rotation();
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
 
-	Barrel->Elevate(DeltaRotator.Pitch); // TODO Fix Magic Number
+	Barrel->Elevate(DeltaRotator.Pitch); 
+	Turret->RotateTurret(DeltaRotator.Yaw); // TODO Fix Magic Number
 }
